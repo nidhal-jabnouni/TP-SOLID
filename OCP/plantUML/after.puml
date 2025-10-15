@@ -1,0 +1,57 @@
+@startuml
+title Resource Allocator - After Refactoring (Following OCP)
+
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor LightGreen
+    BorderColor Black
+    ArrowColor Black
+}
+skinparam linetype ortho
+top to bottom direction
+
+interface Resource <<interface>> {
+    + allocate() : int
+    + free(resourceId: int) : void
+}
+
+class TimeSlotResource {
+    __
+    + allocate() : int
+    + free(resourceId: int) : void
+    __
+    - findFreeTimeSlot() : int
+    - markTimeSlotBusy(resourceId: int) : void
+    - markTimeSlotFree(resourceId: int) : void
+}
+
+class SpaceSlotResource {
+    __
+    + allocate() : int
+    + free(resourceId: int) : void
+    __
+    - findFreeSpaceSlot() : int
+    - markSpaceSlotBusy(resourceId: int) : void
+    - markSpaceSlotFree(resourceId: int) : void
+}
+
+class ResourceAllocator {
+    __
+    + allocate(resource: Resource) : int
+    + free(resource: Resource, resourceId: int) : void
+}
+
+class Client {
+    __
+    + {static} main(args: String[]) : void
+}
+
+Resource <|.. TimeSlotResource : implements
+Resource <|.. SpaceSlotResource : implements
+
+ResourceAllocator --> Resource : uses
+
+Client ..> ResourceAllocator : uses
+Client ..> Resource : creates
+
+@enduml

@@ -1,0 +1,34 @@
+@startuml
+title Resource Allocator - Before Refactoring (Violating OCP)
+
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor LightYellow
+    BorderColor Black
+    ArrowColor Black
+}
+skinparam linetype ortho
+top to bottom direction
+
+class ResourceAllocator {
+    - {static} INVALID_RESOURCE_ID : int {final}
+    __
+    + allocate(resourceType: ResourceType) : int
+    + free(resourceType: ResourceType, resourceId: int) : void
+    __
+    - markSpaceSlotFree(resourceId: int) : void
+    - markTimeSlotFree(resourceId: int) : void
+    - markSpaceSlotBusy(resourceId: int) : void
+    - findFreeSpaceSlot() : int
+    - markTimeSlotBusy(resourceId: int) : void
+    - findFreeTimeSlot() : int
+}
+
+enum ResourceType {
+    TIME_SLOT
+    SPACE_SLOT
+}
+
+ResourceAllocator --> ResourceType : depends on
+
+@enduml

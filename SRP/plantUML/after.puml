@@ -1,0 +1,67 @@
+@startuml
+title Car Management System - After Refactoring (Following SRP)
+
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor LightGreen
+    BorderColor Black
+    ArrowColor Black
+}
+skinparam linetype ortho
+top to bottom direction
+
+class Client {
+    __
+    + {static} main(args: String[]) : void
+}
+
+class CarService {
+    - _repository : CarRepository {final}
+    __
+    + CarService(repository: CarRepository)
+    + getBestCar() : Car
+}
+
+class CarFormatter {
+    __
+    + formatCarNames(cars: List<Car>) : String
+    + formatCarName(car: Car) : String
+}
+
+interface CarRepository <<interface>> {
+    + findById(id: String) : Car
+    + findAll() : List<Car>
+}
+
+class InMemoryCarRepository {
+    - _cars : List<Car> {final}
+    __
+    + findById(id: String) : Car
+    + findAll() : List<Car>
+}
+
+class Car {
+    - _id : String {final}
+    - _model : String {final}
+    - _brand : String {final}
+    __
+    + Car(id: String, model: String, brand: String)
+    + getId() : String
+    + getModel() : String
+    + getBrand() : String
+}
+
+Client ..> CarService : uses
+Client ..> CarFormatter : uses
+Client ..> CarRepository : uses
+
+CarService --> CarRepository : uses
+
+CarRepository <|.. InMemoryCarRepository : implements
+
+InMemoryCarRepository --> "*" Car : stores
+
+CarService ..> Car : returns
+CarFormatter ..> Car : formats
+
+@enduml

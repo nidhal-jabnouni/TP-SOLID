@@ -1,0 +1,33 @@
+@startuml
+title Car Management System - Before Refactoring (Violating SRP)
+
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor LightYellow
+    BorderColor Black
+    ArrowColor Black
+}
+skinparam linetype ortho
+
+class CarManager {
+    - _carsDb : List<Car>
+    __
+    + getFromDb(carId: String) : Car
+    + getCarsNames() : String
+    + getBestCar() : Car
+}
+
+class Car {
+    - _id : String {final}
+    - _model : String {final}
+    - _brand : String {final}
+    __
+    + Car(id: String, model: String, brand: String)
+    + getId() : String
+    + getModel() : String
+    + getBrand() : String
+}
+
+CarManager -down-> "*" Car : manages
+
+@enduml
