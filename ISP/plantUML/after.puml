@@ -1,0 +1,68 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+interface Door {
+    + lock(): void
+    + unlock(): void
+    + open(): void
+    + close(): void
+}
+
+interface TimedDoorClient {
+    + timeOutCallback(): void
+}
+
+interface ProximityDoorClient {
+    + proximityCallback(): void
+}
+
+class SensingDoor {
+    - _locked: boolean
+    - _opened: boolean
+    + lock(): void
+    + unlock(): void
+    + open(): void
+    + close(): void
+    + proximityCallback(): void
+}
+
+class TimedDoor {
+    - TIME_OUT: int {static}
+    - _locked: boolean
+    - _opened: boolean
+    + lock(): void
+    + unlock(): void
+    + open(): void
+    + close(): void
+    + timeOutCallback(): void
+}
+
+class Sensor {
+    + register(ProximityDoorClient): void
+    - isPersonClose(): boolean
+}
+
+class Timer {
+    + register(long, TimedDoorClient): void
+}
+
+SensingDoor ..|> Door : implements
+SensingDoor ..|> ProximityDoorClient : implements
+TimedDoor ..|> Door : implements
+TimedDoor ..|> TimedDoorClient : implements
+Sensor ..> ProximityDoorClient : uses
+Timer ..> TimedDoorClient : uses
+
+note right of SensingDoor
+  ISP COMPLIANT:
+  Only implements methods
+  it actually needs
+end note
+
+note right of TimedDoor
+  ISP COMPLIANT:
+  Only implements methods
+  it actually needs
+end note
+
+@enduml

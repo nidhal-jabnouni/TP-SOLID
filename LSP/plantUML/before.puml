@@ -1,0 +1,34 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Duck {
+    + quack(): void
+    + swim(): void
+}
+
+class ElectronicDuck {
+    - _on: boolean
+    + quack(): void
+    + swim(): void
+    + turnOn(): void
+    + turnOff(): void
+}
+
+class Pool {
+    + run(): void
+    - quack(Duck...): void
+    - swim(Duck...): void
+    + main(String[]): void
+}
+
+ElectronicDuck --|> Duck : extends
+Pool ..> Duck : uses
+
+note right of ElectronicDuck
+  LSP VIOLATION:
+  Throws RuntimeException
+  when _on is false,
+  breaking Duck's contract
+end note
+
+@enduml

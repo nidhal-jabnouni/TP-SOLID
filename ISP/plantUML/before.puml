@@ -1,0 +1,64 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+interface Door {
+    + lock(): void
+    + unlock(): void
+    + open(): void
+    + close(): void
+    + timeOutCallback(): void
+    + proximityCallback(): void
+}
+
+class SensingDoor {
+    - _locked: boolean
+    - _opened: boolean
+    + lock(): void
+    + unlock(): void
+    + open(): void
+    + close(): void
+    + timeOutCallback(): void
+    + proximityCallback(): void
+}
+
+class TimedDoor {
+    - TIME_OUT: int {static}
+    - _locked: boolean
+    - _opened: boolean
+    + lock(): void
+    + unlock(): void
+    + open(): void
+    + close(): void
+    + timeOutCallback(): void
+    + proximityCallback(): void
+}
+
+class Sensor {
+    + register(Door): void
+    - isPersonClose(): boolean
+}
+
+class Timer {
+    + register(long, Door): void
+}
+
+SensingDoor ..|> Door : implements
+TimedDoor ..|> Door : implements
+Sensor ..> Door : uses
+Timer ..> Door : uses
+
+note right of SensingDoor
+  ISP VIOLATION:
+  Throws NotImplementedException
+  for timeOutCallback()
+  (unused method)
+end note
+
+note right of TimedDoor
+  ISP VIOLATION:
+  Throws NotImplementedException
+  for proximityCallback()
+  (unused method)
+end note
+
+@enduml

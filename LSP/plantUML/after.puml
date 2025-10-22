@@ -1,0 +1,39 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+interface IQuackable {
+    + quack(): void
+}
+
+interface ISwimmable {
+    + swim(): void
+}
+
+class Duck {
+    + quack(): void
+    + swim(): void
+}
+
+class ElectronicDuck {
+    - _on: boolean
+    + quack(): void
+    + swim(): void
+    + turnOn(): void
+    + turnOff(): void
+}
+
+class Pool {
+    + run(): void
+    - quack(IQuackable): void
+    - swim(ISwimmable): void
+    + main(String[]): void
+}
+
+Duck ..|> IQuackable : implements
+Duck ..|> ISwimmable : implements
+ElectronicDuck ..|> IQuackable : implements
+ElectronicDuck ..|> ISwimmable : implements
+Pool ..> IQuackable : uses
+Pool ..> ISwimmable : uses
+
+@enduml
