@@ -1,0 +1,70 @@
+@startuml EncodingModule Class Diagram
+
+' Main Classes
+class EncodingModuleClient {
+  + {static} main(String[] args) : void
+}
+
+class EncodingModule {
+  + encodeWithFiles() : void
+  + encodeBasedOnNetworkAndDatabase() : void
+}
+
+class MyDatabase {
+  - {static} _data : Map<Integer, String>
+  - {static} _count : int
+  + write(String inputString) : int
+}
+
+' Java Standard Library Classes (External Dependencies)
+class BufferedReader <<Java IO>> {
+}
+
+class BufferedWriter <<Java IO>> {
+}
+
+class FileReader <<Java IO>> {
+}
+
+class FileWriter <<Java IO>> {
+}
+
+class URL <<Java Net>> {
+}
+
+class InputStream <<Java IO>> {
+}
+
+class InputStreamReader <<Java IO>> {
+}
+
+class Base64 <<Java Util>> {
+  + {static} getEncoder() : Encoder
+}
+
+' Relationships
+EncodingModuleClient ..> EncodingModule : <<uses>>
+EncodingModule ..> MyDatabase : <<uses>>
+EncodingModule ..> BufferedReader : <<uses>>
+EncodingModule ..> BufferedWriter : <<uses>>
+EncodingModule ..> FileReader : <<uses>>
+EncodingModule ..> FileWriter : <<uses>>
+EncodingModule ..> URL : <<uses>>
+EncodingModule ..> InputStream : <<uses>>
+EncodingModule ..> InputStreamReader : <<uses>>
+EncodingModule ..> Base64 : <<uses>>
+
+' Notes
+note right of EncodingModule
+  Violates Dependency Inversion Principle:
+  - Depends directly on concrete implementations
+  - Coupled to file system, network, and database
+  - No abstraction layer for I/O operations
+end note
+
+note right of MyDatabase
+  Simple in-memory database
+  using HashMap storage
+end note
+
+@enduml
