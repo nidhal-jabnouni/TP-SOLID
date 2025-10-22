@@ -1,0 +1,106 @@
+@startuml DIP Refactored Architecture
+
+title Refactored Architecture - DIP Violation Fixed
+
+package "Abstractions" {
+    interface IReader {
+        + String read()
+    }
+    
+    interface IWriter {
+        + void write(String data)
+    }
+    
+    interface IEncoder {
+        + String encode(String data)
+    }
+}
+
+package "High-Level Module" {
+    class EncodingModule {
+        - IReader reader
+        - IWriter writer
+        - IEncoder encoder
+        + EncodingModule(IReader, IWriter, IEncoder)
+        + void encode()
+    }
+}
+
+package "Low-Level Implementations" {
+    class FileReaderImpl {
+        - String filePath
+        + FileReaderImpl(String filePath)
+        + String read()
+    }
+    
+    class FileWriterImpl {
+        - String filePath
+        + FileWriterImpl(String filePath)
+        + void write(String data)
+    }
+    
+    class NetworkReaderImpl {
+        - String url
+        + NetworkReaderImpl(String url)
+        + String read()
+    }
+    
+    class DatabaseWriterImpl {
+        - MyDatabase database
+        + DatabaseWriterImpl(MyDatabase db)
+        + void write(String data)
+    }
+    
+    class Base64Encoder {
+        + String encode(String data)
+    }
+    
+    class MyDatabase {
+        - Map<Integer, String> _data
+        - int _count
+        + int write(String inputString)
+    }
+}
+
+package "Client" {
+    class EncodingModuleClient {
+        + {static} void main(String[] args)
+    }
+}
+
+' Dependencies pointing from low-level to high-level (DIP)
+FileReaderImpl ..|> IReader
+FileWriterImpl ..|> IWriter
+NetworkReaderImpl ..|> IReader
+DatabaseWriterImpl ..|> IWriter
+Base64Encoder ..|> IEncoder
+
+' High-level module depends on abstractions
+EncodingModule --> IReader
+EncodingModule --> IWriter
+EncodingModule --> IEncoder
+
+' Client creates concrete implementations and injects them
+EncodingModuleClient ..> EncodingModule : creates
+EncodingModuleClient ..> FileReaderImpl : creates
+EncodingModuleClient ..> FileWriterImpl : creates
+EncodingModuleClient ..> NetworkReaderImpl : creates
+EncodingModuleClient ..> DatabaseWriterImpl : creates
+EncodingModuleClient ..> Base64Encoder : creates
+
+DatabaseWriterImpl --> MyDatabase : uses
+
+note right of EncodingModule
+  Now depends on abstractions (IReader, IWriter, IEncoder)
+  instead of concrete implementations.
+  Dependencies are injected via constructor.
+end note
+
+note left of IReader
+  Abstractions allow high-level module
+  to be independent of low-level details.
+  Low-level modules depend on these
+  abstractions (dependency inversion).
+end note
+
+@enduml
